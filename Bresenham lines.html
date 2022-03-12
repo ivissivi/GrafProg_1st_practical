@@ -1,0 +1,92 @@
+<html>
+<head>
+<script type="text/javascript">
+
+var bresenhamCtx;
+
+function onLoad() {
+  bresenhamCtx = document.getElementById('myCanvas').getContext('2d');
+
+  var lines = [];
+  var angle;
+  for(angle = -Math.PI / 1; angle <= Math.PI / 1; angle += Math.PI / 10) {
+    lines.push([
+      [Math.round(-100 * Math.cos(angle)) + 100, Math.round(-100 * Math.sin(angle)) + 100],
+      [Math.round(100 * Math.cos(angle)) + 100, Math.round(100 * Math.sin(angle)) + 100]
+    ])
+  }
+
+  var line;
+  for (line in lines) {
+    drawLine(lines[line][0], lines[line][1]);
+  }
+
+  drawDefaultLine(bresenhamCtx);
+
+}
+
+function drawLine(startPosition, endPosition) {
+var deltaX = endPosition[0] - startPosition[0];
+var deltaY = endPosition[1] - startPosition[1];
+var error = 0;
+var deltaError;
+
+var purple = [143, 0, 255];
+
+if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+  deltaError = deltaY / deltaX;
+
+if (deltaError < 0) {
+
+y = startPosition[1];
+
+for(x = startPosition[0]; x <= endPosition[0]; x++) {
+  putPixel(x, y, purple);
+  error += deltaError;
+
+if(error <= -0.5) {
+  y -= 1.0;
+  error += 1.0
+}
+}
+} else {
+
+y = startPosition[1];
+
+for(x = startPosition[0]; x <= endPosition[0]; x++) {
+  putPixel(x, y, purple);
+  error += deltaError;
+
+if (error >= 0.5) {
+  y += 1.0;
+  error -= 1.0
+}
+}
+}
+} else {
+  deltaError = deltaX / deltaY;
+}
+}
+
+function drawDefaultLine(ctx){
+ctx.beginPath();
+ctx.moveTo(50, 50);
+ctx.lineTo(150, 70);
+ctx.stroke();
+}
+
+function putPixel(x, y, color) {
+  bresenhamCtx.fillStyle = 'rgb(' + Math.round(color[0]) + ',' + Math.round(color[1]) + ',' + Math.round(color[2]) + ')';
+  bresenhamCtx.fillRect(x, y, 1, 1);
+}
+</script>
+<style type="text/css">
+  canvas {
+    margin: 30px;
+  }
+</style>
+</head>
+<body onLoad="onLoad()">
+  <canvas width="200" height="200" id="myCanvas"></canvas>
+</body>
+</html>
